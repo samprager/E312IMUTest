@@ -20,7 +20,7 @@
 RTIMU *_imu;
 RTIMU_DATA _imuData;
 
-int imuInit(){
+int imu_init(){
   int sampleCount = 0;
   int sampleRate = 0;
   uint64_t rateTimer;
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     }
 
     // set global extern variables (declared in global.hpp)
-    int err = imuInit();
+    int err = imu_init();
 
     bool exitloop = false;
     bool imu_log = true;
