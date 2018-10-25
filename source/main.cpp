@@ -90,6 +90,32 @@ std::string get_imu_data(const std::string &type){
 
 int main(int argc, char *argv[])
 {
+
+    std::string example_option;
+    unsigned long update_interval;
+    //setup the program options
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "help message")
+        ("example_option", po::value<std::string>(&example_option)->default_value("for example"), "this is an example option")
+        ("interval", po::value<unsigned long>(&update_interval)->default_value(IMU_LOG_INTERVAL), "IMU update interval in microseconds")
+    ;
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    //print the help message
+    if (vm.count("help")){
+        std::cout
+            << boost::format("E312IMUTest - write IMU data to a log file  %s.") % desc
+            << std::endl;
+        return ~0;
+    }
+
+    if (vm.count("example_option") > 0) {
+        std::cout<<"Do something here with example option input: "<<example_option<<std::endl;
+    }
+
     boost::filesystem::path out_path;
     const char * home = getenv ("HOME");
     if (home == NULL) {
@@ -117,7 +143,7 @@ int main(int argc, char *argv[])
       while (_imu->IMURead()) {
         _imuData = _imu->getIMUData();
         now = RTMath::currentUSecsSinceEpoch();
-        if ((now-logtimer)>IMU_LOG_INTERVAL){
+        if ((now-logtimer)>update_interval){
             if(imu_log){
               std::stringstream ss;
               std::string timestamp = to_iso_string(boost::posix_time::microsec_clock::local_time());
