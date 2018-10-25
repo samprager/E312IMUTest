@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
               std::stringstream ss;
               std::string timestamp = to_iso_string(boost::posix_time::microsec_clock::local_time());
               ss << timestamp<<" : "<<get_imu_data("all") <<"\n";
-              outfile << ss.str() <<std::endl;
+              outfile << ss.str();
               //outfile.flush();
             }
             logtimer = now;
