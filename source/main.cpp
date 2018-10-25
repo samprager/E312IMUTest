@@ -21,6 +21,8 @@ RTIMU *_imu;
 RTIMU_DATA _imuData;
 
 int imu_init(){
+  // These aren't used here, but were probably included in an example from RTIMULIb...
+  // I'll keep them around for now in case they provide hints moving forward
   int sampleCount = 0;
   int sampleRate = 0;
   uint64_t rateTimer;
