@@ -92,12 +92,12 @@ int main(int argc, char *argv[])
     const char * home = getenv ("HOME");
     if (home == NULL) {
       out_path = boost::filesystem::system_complete(argv[0]).parent_path().parent_path().parent_path();
-      std::cerr << "error: Env HOME variable not set. Using " <<p.string()<< std::endl;
+      std::cerr << "error: Env HOME variable not set. Using " <<out_path.string()<< std::endl;
      //  throw std::invalid_argument ("error: HOME environment variable not set.");
     }
     else{
         out_path = boost::filesystem::path(std::string(home)) / boost::filesystem::path(".E312IMUTest");
-        if (!boost::filesystem::exists(p)) boost::filesystem::create_directory(p);
+        if (!boost::filesystem::exists(out_path)) boost::filesystem::create_directory(out_path);
     }
 
     // set global extern variables (declared in global.hpp)
