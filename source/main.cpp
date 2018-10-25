@@ -118,9 +118,6 @@ int main(int argc, char *argv[])
         _imuData = _imu->getIMUData();
         now = RTMath::currentUSecsSinceEpoch();
         if ((now-logtimer)>IMU_LOG_INTERVAL){
-            statstream<< "IMU : "<< get_imu_data("all") <<"\n";
-            statstream<< "----------------- ARM Timestamp -----------------\n";
-            statstream<< "Timestamp: "<<timestamp<<"\n";
             if(imu_log){
               std::stringstream ss;
               std::string timestamp = to_iso_string(boost::posix_time::microsec_clock::local_time());
