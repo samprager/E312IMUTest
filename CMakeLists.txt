@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 
 project(E312IMUTest)
 
+# Tell CMake to run moc when necessary:
+set(CMAKE_AUTOMOC ON)
+# As moc files are generated in the binary dir, tell CMake
+# to always look for includes there:
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 # Add compiler flags for building executables (-fPIE)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -29,6 +35,9 @@ find_package(Boost "1.46" REQUIRED ${BOOST_REQUIRED_COMPONENTS})
 
 find_path(RTIMULib_INCLUDE_DIR RTIMULib.h)
 find_library(RTIMULib_LIBRARY NAMES libRTIMULib)
+
+message("RTIMULib include dir: ${RTIMULib_INCLUDE_DIR}")
+message("RTIMULib libraries: ${RTIMULib_LIBRARY}")
 
 ### Configure Compiler ########################################################
 include_directories(
