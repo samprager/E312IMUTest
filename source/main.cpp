@@ -93,12 +93,14 @@ int main(int argc, char *argv[])
 
     std::string example_option;
     unsigned long update_interval;
+    bool printonly;
     //setup the program options
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help", "help message")
         ("example_option", boost::program_options::value<std::string>(&example_option)->default_value("for example"), "this is an example option")
         ("interval", boost::program_options::value<unsigned long>(&update_interval)->default_value(IMU_LOG_INTERVAL), "IMU update interval in microseconds")
+        ("printonly", boost::program_options::value<bool>(&printonly)->default_value(false), "Only print data to screen")
     ;
     boost::program_options::variables_map vm;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
@@ -132,7 +134,7 @@ int main(int argc, char *argv[])
     int err = imu_init();
 
     bool exitloop = false;
-    bool imu_log = true;
+    bool imu_log = ~printonly;
     uint64_t now, logtimer;
     boost::filesystem::path imu_logfile = out_path / boost::filesystem::path("imu_data.log");
     std::ofstream outfile(imu_logfile.c_str(),std::ios_base::out | std::ios_base::app);
@@ -144,13 +146,17 @@ int main(int argc, char *argv[])
         _imuData = _imu->getIMUData();
         now = RTMath::currentUSecsSinceEpoch();
         if ((now-logtimer)>update_interval){
+            std::stringstream ss;
+            std::string timestamp = to_iso_string(boost::posix_time::microsec_clock::local_time());
+            std::string logtimestr = std::to_string(now);
+            ss << timestamp<<" : "<<logtimestr<<" : "<<get_imu_data("all");
             if(imu_log){
-              std::stringstream ss;
-              std::string timestamp = to_iso_string(boost::posix_time::microsec_clock::local_time());
-              std::string logtimestr = std::to_string(now);
-              ss << timestamp<<" : "<<logtimestr<<" : "<<get_imu_data("all") <<"\n";
+              ss <<"\n";
               outfile << ss.str();
               //outfile.flush();
+            }
+            else{
+                std::cout<<ss<<"\r"<<std::flush;
             }
             logtimer = now;
         }
