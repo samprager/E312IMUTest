@@ -91,15 +91,17 @@ std::string get_imu_data(const std::string &type){
 int main(int argc, char *argv[])
 {
 
-    std::string example_option;
+    std::string example_option,filename;
     unsigned long update_interval;
     bool printonly;
+
     //setup the program options
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help", "help message")
         ("example_option", boost::program_options::value<std::string>(&example_option)->default_value("for example"), "this is an example option")
         ("interval", boost::program_options::value<unsigned long>(&update_interval)->default_value(IMU_LOG_INTERVAL), "IMU update interval in microseconds")
+        ("file", boost::program_options::value<std::string>(&filename), "Output file name (will be in ~/.E312IMUTest/)")
         ("printonly", boost::program_options::value<bool>(&printonly)->default_value(false), "Only print data to screen")
     ;
     boost::program_options::variables_map vm;
@@ -134,9 +136,17 @@ int main(int argc, char *argv[])
     int err = imu_init();
 
     bool exitloop = false;
-    bool imu_log = ~printonly;
+    bool imu_log = not printonly;
     uint64_t now, logtimer;
-    boost::filesystem::path imu_logfile = out_path / boost::filesystem::path("imu_data.log");
+
+    boost::filesystem::path imu_logfile;
+
+    if if (vm.count("file")){
+        imu_logfile = out_path / boost::filesystem::path(filename);
+    }
+    else{
+        imu_logfile = out_path / boost::filesystem::path("imu_data.log");
+    }
     std::ofstream outfile(imu_logfile.c_str(),std::ios_base::out | std::ios_base::app);
     outfile <<"\nTimestamp : Log Time : Fusion(roll,pitch,yaw) : Accel(x,y,z) : Gyro(x,y,z) : Compass(x,y,z)\n"<<std::endl;
     logtimer = 0;//RTMath::currentUSecsSinceEpoch();
