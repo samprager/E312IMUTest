@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
     uint64_t now, logtimer;
     boost::filesystem::path imu_logfile = out_path / boost::filesystem::path("imu_data.log");
     std::ofstream outfile(imu_logfile.c_str(),std::ios_base::out | std::ios_base::app);
-    outfile <<"\nTimestamp : Vita Time : Fusion(roll,pitch,yaw) : Accel(x,y,z) : Gyro(x,y,z) : Compass(x,y,z)\n"<<std::endl;
+    outfile <<"\nTimestamp : Log Time : Fusion(roll,pitch,yaw) : Accel(x,y,z) : Gyro(x,y,z) : Compass(x,y,z)\n"<<std::endl;
     logtimer = 0;//RTMath::currentUSecsSinceEpoch();
     while (!exitloop){
       usleep(_imu->IMUGetPollInterval() * 1000); // this should be in usec? check to confirm IMUGetPollInterval() return value
@@ -147,7 +147,8 @@ int main(int argc, char *argv[])
             if(imu_log){
               std::stringstream ss;
               std::string timestamp = to_iso_string(boost::posix_time::microsec_clock::local_time());
-              ss << timestamp<<" : "<<get_imu_data("all") <<"\n";
+              std::string logtimestr = std::to_string(now);
+              ss << timestamp<<" : "<<logtimestr<<" : "<<get_imu_data("all") <<"\n";
               outfile << ss.str();
               //outfile.flush();
             }
