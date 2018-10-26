@@ -97,11 +97,11 @@ int main(int argc, char *argv[])
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help", "help message")
-        ("example_option", po::value<std::string>(&example_option)->default_value("for example"), "this is an example option")
-        ("interval", po::value<unsigned long>(&update_interval)->default_value(IMU_LOG_INTERVAL), "IMU update interval in microseconds")
+        ("example_option", boost::program_options::value<std::string>(&example_option)->default_value("for example"), "this is an example option")
+        ("interval", boost::program_options::value<unsigned long>(&update_interval)->default_value(IMU_LOG_INTERVAL), "IMU update interval in microseconds")
     ;
     boost::program_options::variables_map vm;
-    boost::program_options::store(po::parse_command_line(argc, argv, desc), vm);
+    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
     boost::program_options::notify(vm);
 
     //print the help message
