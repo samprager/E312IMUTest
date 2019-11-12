@@ -1,3 +1,12 @@
+/*
+  File Name: main.cpp
+  Description: IMU data extraction for USRP E310/E312
+  Author: Samuel Prager
+  Email: sprager@usc.edu
+  Created: January 1 2018
+  Copyright 2012-2019 Samuel Prager
+*/
+
 #include <iostream>
 #include <string>
 #include <iterator>
