@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 
     boost::filesystem::path imu_logfile;
 
-    if if (vm.count("file")){
+    if (vm.count("file")){
         imu_logfile = out_path / boost::filesystem::path(filename);
     }
     else{
