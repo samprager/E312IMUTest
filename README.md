@@ -16,13 +16,13 @@ git clone https://github.com/RPi-Distro/RTIMULib.git
 cd RTIMULib/Linux
 mkdir build
 cd build
-cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchains/oe-sdk_cross.cmake -DCMAKE_INSTALL_PREFIX=/usr ../
+cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=../../uhd/host/cmake/Toolchains/oe-sdk_cross.cmake -DCMAKE_INSTALL_PREFIX=/usr ../
 make -j4
 make -j4 install DESTDIR=~/prefix
 ```
-Now simply copy the compiled library files from the SDK to the E312.
+Note that you must provide a path to the appropriate cmake Toolchain provided by uhd.
 
-The easiest way is to mount the SDK prefix on the embedded device using sshfs:
+Now simply copy the compiled library files from the SDK to the E312. The easiest way is to mount the SDK prefix on the embedded device using sshfs:
 ```
 $ ssh root@e3xx # After this, we're logged onto the embedded device
 $ pwd # Check where we are
