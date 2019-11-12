@@ -26,6 +26,12 @@
 
 #define IMU_LOG_INTERVAL 1000 // imu log interval in microseconds
 
+static bool stop_signal_called = false;
+void sig_int_handler(int)
+{
+    stop_signal_called = true;
+}
+
 RTIMU *_imu;
 RTIMU_DATA _imuData;
 
@@ -141,10 +147,13 @@ int main(int argc, char *argv[])
         if (!boost::filesystem::exists(out_path)) boost::filesystem::create_directory(out_path);
     }
 
-    // set global extern variables (declared in global.hpp)
+    //Setup IMU
     int err = imu_init();
+    if (err){
+      std::cerr<<"Error intializing IMU"<<std::endl;
+      return 1;
+    }
 
-    bool exitloop = false;
     bool imu_log = not printonly;
     uint64_t now, logtimer;
 
@@ -159,7 +168,11 @@ int main(int argc, char *argv[])
     std::ofstream outfile(imu_logfile.c_str(),std::ios_base::out | std::ios_base::app);
     outfile <<"\nTimestamp : Log Time : Fusion(roll,pitch,yaw) : Accel(x,y,z) : Gyro(x,y,z) : Compass(x,y,z)\n"<<std::endl;
     logtimer = 0;//RTMath::currentUSecsSinceEpoch();
-    while (!exitloop){
+
+    std::signal(SIGINT, &sig_int_handler);
+    std::cout << "Press Ctrl + C to stop streaming..." << std::endl;
+
+    while (!stop_signal_called){
       usleep(_imu->IMUGetPollInterval() * 1000); // this should be in usec? check to confirm IMUGetPollInterval() return value
       while (_imu->IMURead()) {
         _imuData = _imu->getIMUData();
