@@ -16,7 +16,7 @@ git clone https://github.com/RPi-Distro/RTIMULib.git
 cd RTIMULib/Linux
 mkdir build
 cd build
-cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=../../uhd/host/cmake/Toolchains/oe-sdk_cross.cmake -DCMAKE_INSTALL_PREFIX=/usr ../
+cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=../../../uhd/host/cmake/Toolchains/oe-sdk_cross.cmake -DCMAKE_INSTALL_PREFIX=/usr ../
 make -j4
 make -j4 install DESTDIR=~/prefix
 ```
