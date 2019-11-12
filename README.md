@@ -1,5 +1,7 @@
 # E312IMUTest
 
+A simple program that shows how to get IMU data from USRP E310/E312s.
+
 ## Installing RTIMULib
 
 Link to library on git:
