@@ -4,7 +4,7 @@ A simple program that shows how to get IMU data from USRP E310/E312s.
 
 ## Installing RTIMULib
 
-Link to library on git:
+Link to IMU library on git:
 https://github.com/RPi-Distro/RTIMULib
 
 Setting up SDK for cross-compiling for E310/E312:
@@ -17,8 +17,8 @@ cd RTIMULib/Linux
 mkdir build
 cd build
 cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchains/oe-sdk_cross.cmake -DCMAKE_INSTALL_PREFIX=/usr ../
-make -j2
-make install
+make -j4
+make -j4 install DESTDIR=~/prefix
 ```
 Now simply copy the compiled library files from the SDK to the E312.
 
