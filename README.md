@@ -58,3 +58,103 @@ cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchains/oe-sdk_cross.cmake -DC
 make -j4 # This may take a while
 make -j4 install DESTDIR=~/e312_cross
 ```
+
+## Fixing RTIMULib i2c errors
+
+In some cases the `/etc/RTIMULib.ini` file is not created properly. Specifically, device type, I2CBus, and I2CSlaveAddress may not be set correctly..
+
+If this is the case, the following errors may appear:
+
+```
+root@ettus-e3xx-sg3:~# E312IMUTest
+Settings file not found. Using defaults and creating settings file
+Failed to open I2C bus 1
+Failed to open SPI bus 0, select 0
+No IMU detected
+Using fusion algorithm RTQF
+No IMU found
+```
+
+or 
+
+```
+root@ettus-e3xx-sg3:~# E312IMUTest
+Do something here with example option input: for example
+Settings file /etc/RTIMULib.ini loaded
+Using fusion algorithm RTQF
+min/max compass calibration not in use
+Ellipsoid compass calibration not in use
+Accel calibration not in use
+I2C read error from 0, 117 - Failed to read MPU9150 id
+I2C read error from 0, 114 - Failed to read fifo count
+Press Ctrl + C to stop streaming...
+I2C read error from 0, 114 - Failed to read fifo count
+I2C read error from 0, 114 - Failed to read fifo count
+I2C read error from 0, 114 - Failed to read fifo count
+```
+
+### Steps to fix
+
+You should be able to fix the issue by following these steps:
+
+1. Force creation of a new /etc/RTIMULib.ini file if necessary:
+
+```
+root@ettus-e3xx-sg3:~# mv /etc/RTIMULib.ini /etc/RTIMULib.ini.backup
+```
+
+2. Now run the program. You should see the following error output
+
+```
+root@ettus-e3xx-sg3:~# E312IMUTest
+Do something here with example option input: for example
+Settings file not found. Using defaults and creating settings file
+Failed to open I2C bus 1
+Failed to open SPI bus 0, select 0
+No IMU detected
+Using fusion algorithm RTQF
+No IMU found
+```
+
+3. In the newly created /etc/RTIMULib.ini file make the following changes:
+
+```
+IMUType=2
+
+#
+# Fusion type type -
+#   0 - Null. Use if only sensor data required without fusion
+#   1 - Kalman STATE4
+#   2 - RTQF
+FusionType=2
+
+#
+# Is bus I2C: 'true' for I2C, 'false' for SPI
+BusIsI2C=true
+
+#
+# I2C Bus (between 0 and 7)
+I2CBus=0
+
+#
+# SPI Bus (between 0 and 7)
+SPIBus=0
+
+#
+# SPI select (between 0 and 1)
+SPISelect=0
+
+#
+# SPI Speed in Hz
+SPISpeed=500000
+
+#
+# I2C slave address (filled in automatically by auto discover)
+I2CSlaveAddress=105
+```
+
+Note that the `I2CSlaveAddress=105` corresponds to the hex address `0x69`
+
+4. Reboot the device and run the program
+
+A complete example of a working RTIMULib.ini file can be found in the `config` folder.
